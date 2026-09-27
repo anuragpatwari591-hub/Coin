@@ -1,0 +1,43 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+**/secrets.json
+
+# Node / JS
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Hardhat / blockchain
+blockchain/cache/
+blockchain/artifacts/
+blockchain/typechain/
+blockchain/typechain-types/
+
+# Python (research/analytics scripts, if any)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+
+# Wallet / keystore files — belt and suspenders, must never appear
+*.wallet
+keystore/
+mnemonic*.txt
