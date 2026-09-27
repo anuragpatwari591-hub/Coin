@@ -1,0 +1,37 @@
+name: Smart Contract Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "blockchain/**"
+      - ".github/workflows/contracts-ci.yml"
+  pull_request:
+    paths:
+      - "blockchain/**"
+      - ".github/workflows/contracts-ci.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: blockchain
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: blockchain/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npm run compile
+
+      - name: Run test suite
+        run: npm test

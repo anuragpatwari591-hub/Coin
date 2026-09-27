@@ -1,0 +1,44 @@
+name: Docs & Website Sanity Check
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "website/**"
+      - "**.md"
+  pull_request:
+    paths:
+      - "website/**"
+      - "**.md"
+
+jobs:
+  html-sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every website page has the required risk disclaimer
+        run: |
+          missing=0
+          for f in website/*.html; do
+            if ! grep -q "unregulated and can be highly risky" "$f"; then
+              echo "Missing ASCI disclaimer in $f"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "One or more website pages is missing the required disclaimer."
+            exit 1
+          fi
+          echo "All website pages contain the required disclaimer."
+
+      - name: Check for banned hype language in website copy
+        run: |
+          # Negative lookbehind excludes correct negated usage, e.g. our own
+          # "no guaranteed returns" disclaimers — those are compliant, not violations.
+          banned="(guaranteed returns|risk-free|get rich|100x|to the moon)"
+          if grep -riP "(?<!no )(?<!not )(?<!No )(?<!Not )(?<!never )(?<!Never )$banned" website/*.html; then
+            echo "Banned hype language found in website copy — see marketing/strategy/style-guide.md"
+            exit 1
+          fi
+          echo "No banned hype language found."
