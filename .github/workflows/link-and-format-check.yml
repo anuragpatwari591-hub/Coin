@@ -15,7 +15,7 @@ jobs:
   html-sanity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check every website page has the required risk disclaimer
         run: |
